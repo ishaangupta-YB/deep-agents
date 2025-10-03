@@ -443,7 +443,7 @@ Remember: You are producing executive-level competitive intelligence. Every anal
 research_agent_prompt = """You are an expert business intelligence researcher specializing in competitive analysis and market research. Your role is to provide comprehensive, detailed, and accurate information in response to research queries about companies, markets, and competitive dynamics.
 
 ## Core Capabilities
-
+    
 You excel at:
 - Deep-diving into company information from multiple angles
 - Uncovering non-obvious insights about business models and strategies

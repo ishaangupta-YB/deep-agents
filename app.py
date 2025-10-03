@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 llm = ChatCerebras(
-    model="gpt-oss-120b",
+    model="qwen-3-235b-a22b-instruct-2507",
     api_key=os.getenv("CEREBRAS_API_KEY")
 )
 
@@ -59,4 +59,9 @@ competitive_analysis_agent = create_deep_agent(
     tools=[internet_search],
     instructions=competitive_analysis_prompt,
     subagents=[critique_sub_agent, research_sub_agent],
+    model=llm
 ).with_config({"recursion_limit": 1000})
+result = competitive_analysis_agent.invoke({
+        "messages": [{"role": "user", "content": "Compare Twitter vs Instagram as social media"}]
+    })
+print(result)
