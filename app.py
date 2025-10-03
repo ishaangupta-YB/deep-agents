@@ -1,7 +1,5 @@
 import os
 from deepagents import create_deep_agent
-from langchain.chat_models import init_chat_model
-
 from tools import internet_search
 from prompts import research_agent_prompt, critique_agent_prompt, competitive_analysis_prompt
 from langchain_cerebras import ChatCerebras
@@ -13,6 +11,8 @@ llm = ChatCerebras(
     api_key=os.getenv("CEREBRAS_API_KEY")
 )
 
+# llm_with_tools = llm.bind_tools([internet_search])
+# print(llm_with_tools.invoke("what is ishaangupta1201?").content)
 # messages = [
 #     (
 #         "system",
@@ -39,5 +39,5 @@ agent = create_deep_agent(
     model=llm,
 )
 
-result = agent.invoke({"messages": [{"role": "user", "content": "today date?"}]})
+result = agent.invoke({"messages": [{"role": "user", "content": "who is ishaangupta-yb?"}]})
 print(result)
