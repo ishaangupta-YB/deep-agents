@@ -24,20 +24,39 @@ llm = ChatCerebras(
 #     print(chunk.content, end="", flush=True)
 
 
-research_instructions = """You are an expert researcher. Your job is to conduct thorough research, and then answer the query.
+# research_instructions = """You are an expert researcher. Your job is to conduct thorough research, and then answer the query.
+#
+# You have access to a few tools.
+#
+# ## `internet_search`
+#
+# Use this to run an internet search for a given query. You can specify the number of results, the topic, and whether raw content should be included.
+# """
+#
+# agent = create_deep_agent(
+#     tools=[internet_search],
+#     instructions=research_instructions,
+#     model=llm,
+# )
+# result = agent.invoke({"messages": [{"role": "user", "content": "who is ishaangupta-yb?"}]})
+# print(result)
 
-You have access to a few tools.
 
-## `internet_search`
+research_sub_agent = {
+    "name": "research-agent",
+    "description": "Expert business intelligence researcher. Use for deep-dive research on specific aspects of companies (e.g., 'Company A pricing and packaging details', 'Company B customer reviews and satisfaction', 'recent partnerships and acquisitions for Company A'). Always call with ONE focused research topic. For multiple topics, call multiple times in parallel.",
+    "prompt": research_agent_prompt,
+    "tools": [internet_search],
+}
 
-Use this to run an internet search for a given query. You can specify the number of results, the topic, and whether raw content should be included.
-"""
+critique_sub_agent = {
+    "name": "critique-agent",
+    "description": "Strategic report reviewer. Use after drafting company_profiles.md or competitive_analysis.md to identify critical gaps and needed improvements. Optionally specify focus areas (e.g., 'focus on strategic recommendations quality' or 'check for balance between both companies').",
+    "prompt": critique_agent_prompt,
+}
 
-agent = create_deep_agent(
+competitive_analysis_agent = create_deep_agent(
     tools=[internet_search],
-    instructions=research_instructions,
-    model=llm,
-)
-
-result = agent.invoke({"messages": [{"role": "user", "content": "who is ishaangupta-yb?"}]})
-print(result)
+    instructions=competitive_analysis_prompt,
+    subagents=[critique_sub_agent, research_sub_agent],
+).with_config({"recursion_limit": 1000})
